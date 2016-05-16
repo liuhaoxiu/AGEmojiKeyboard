@@ -15,6 +15,7 @@ static const CGFloat ButtonHeight = 37;
 static const NSUInteger DefaultRecentEmojisMaintainedCount = 50;
 
 static NSString *const segmentRecentName = @"Recent";
+static NSString *const displayAll = @"DisplayAll";
 NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 
 
@@ -33,17 +34,36 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
 
 - (NSDictionary *)emojis {
   if (!_emojis) {
-    NSBundle *selfBundle = [NSBundle bundleForClass:[self class]];
-    NSString *plistPath = [selfBundle pathForResource:@"EmojisList"
-                                               ofType:@"plist"];
-    _emojis = [[NSDictionary dictionaryWithContentsOfFile:plistPath] copy];
+      NSBundle *selfBundle = [NSBundle bundleForClass:[self class]];
+      NSString *plistPath = [selfBundle pathForResource:@"EmojisList"
+                                                 ofType:@"plist"];
+      NSDictionary *emojiList = [NSDictionary dictionaryWithContentsOfFile:plistPath];
+      
+      if (self.isDisplayAll) {
+          NSMutableArray *emojiArray = [NSMutableArray new];
+          [emojiList enumerateKeysAndObjectsUsingBlock:^(NSString *key, NSArray *obj, BOOL *stop) {
+              if ([key isEqualToString:@"People"] || [key isEqualToString:@"Places"] || [key isEqualToString:@"Nature"] ) {
+                  [emojiArray addObjectsFromArray:obj];
+              }
+          }];
+          
+          emojiList = [NSDictionary dictionaryWithObject:[emojiArray copy] forKey:displayAll];
+      }
+      
+    _emojis = [emojiList copy];
   }
   return _emojis;
 }
 
 - (NSString *)categoryNameAtIndex:(NSUInteger)index {
-  NSArray *categoryList = @[segmentRecentName, @"People", @"Objects", @"Nature", @"Places", @"Symbols"];
-  return categoryList[index];
+    NSArray *categoryList;
+    if (self.isDisplayAll) {
+        categoryList = @[displayAll];
+    }
+    else {
+        categoryList = @[segmentRecentName, @"People", @"Objects", @"Nature", @"Places", @"Symbols"];
+    }
+    return categoryList[index];
 }
 
 - (AGEmojiKeyboardViewCategoryImage)defaultSelectedCategory {
@@ -109,29 +129,35 @@ NSString *const RecentUsedEmojiCharactersKey = @"RecentUsedEmojiCharactersKey";
   [[NSUserDefaults standardUserDefaults] setObject:recentEmojis forKey:RecentUsedEmojiCharactersKey];
 }
 
-- (instancetype)initWithFrame:(CGRect)frame dataSource:(id<AGEmojiKeyboardViewDataSource>)dataSource {
+- (instancetype)initWithFrame:(CGRect)frame dataSource:(id<AGEmojiKeyboardViewDataSource>)dataSource isDisplayAll:(BOOL)isDisplayAll {
   self = [super initWithFrame:frame];
   if (self) {
     // initialize category
+      _isDisplayAll = isDisplayAll;
+      _dataSource = dataSource;
 
-    _dataSource = dataSource;
+      self.category = [self categoryNameAtIndex:self.defaultSelectedCategory];
 
-    self.category = [self categoryNameAtIndex:self.defaultSelectedCategory];
-
-    self.segmentsBar = [[UISegmentedControl alloc] initWithItems:self.imagesForSelectedSegments];
-    self.segmentsBar.frame = CGRectMake(0,
+      if (self.isDisplayAll) {
+          self.segmentsBar = [[UISegmentedControl alloc] initWithFrame:CGRectZero];
+      }
+      else
+      {
+          self.segmentsBar = [[UISegmentedControl alloc] initWithItems:self.imagesForSelectedSegments];
+          self.segmentsBar.frame = CGRectMake(0,
                                         0,
                                         CGRectGetWidth(self.bounds),
                                         CGRectGetHeight(self.segmentsBar.bounds));
-    self.segmentsBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+          self.segmentsBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 
-    [self.segmentsBar addTarget:self
+          [self.segmentsBar addTarget:self
                          action:@selector(categoryChangedViaSegmentsBar:)
                forControlEvents:UIControlEventValueChanged];
-    [self setSelectedCategoryImageInSegmentControl:self.segmentsBar
+          [self setSelectedCategoryImageInSegmentControl:self.segmentsBar
                                            atIndex:self.defaultSelectedCategory];
-    self.segmentsBar.selectedSegmentIndex = self.defaultSelectedCategory;
-    [self addSubview:self.segmentsBar];
+          self.segmentsBar.selectedSegmentIndex = self.defaultSelectedCategory;
+          [self addSubview:self.segmentsBar];
+      }
 
     self.pageControl = [[UIPageControl alloc] init];
     self.pageControl.hidesForSinglePage = YES;

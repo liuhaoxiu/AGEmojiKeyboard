@@ -1,5 +1,5 @@
 platform :ios, '7.0'
 
-#pod "AGEmojiKeyboard", :path => "../AGEmojiKeyboard.podspec"
+pod "AGEmojiKeyboard", :path => "../AGEmojiKeyboard.podspec"
 
-pod 'AGEmojiKeyboard', :git => 'https://github.com/ayushgoel/AGEmojiKeyboard', :tag => '0.2.0'
+#pod 'AGEmojiKeyboard', :git => 'https://github.com/liuhaoxiu/AGEmojiKeyboard', :tag => '0.3.0'

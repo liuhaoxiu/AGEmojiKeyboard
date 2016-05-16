@@ -1,20 +1,14 @@
 PODS:
-  - AGEmojiKeyboard (0.2.0)
+  - AGEmojiKeyboard (0.3.0)
 
 DEPENDENCIES:
-  - AGEmojiKeyboard (from `https://github.com/ayushgoel/AGEmojiKeyboard`, tag `0.2.0`)
+  - AGEmojiKeyboard (from `../AGEmojiKeyboard.podspec`)
 
 EXTERNAL SOURCES:
   AGEmojiKeyboard:
-    :git: https://github.com/ayushgoel/AGEmojiKeyboard
-    :tag: 0.2.0
-
-CHECKOUT OPTIONS:
-  AGEmojiKeyboard:
-    :git: https://github.com/ayushgoel/AGEmojiKeyboard
-    :tag: 0.2.0
+    :path: ../AGEmojiKeyboard.podspec
 
 SPEC CHECKSUMS:
-  AGEmojiKeyboard: efcb7244ace99deb8eb2c63867ffad198d219fe0
+  AGEmojiKeyboard: c12e4225e2921677b4c8e85e98a3577f291cde6f
 
 COCOAPODS: 0.39.0

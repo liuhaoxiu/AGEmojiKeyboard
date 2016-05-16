@@ -42,6 +42,12 @@ typedef NS_ENUM(NSInteger, AGEmojiKeyboardViewCategoryImage) {
 @property (nonatomic, readonly) UIPageControl *pageControl;
 
 /**
+ displays all the emoji
+ default value is NO
+ */
+@property (nonatomic) BOOL isDisplayAll;
+
+/**
  Scroll view displays all the emoji pages.
  */
 @property (nonatomic, readonly) UIScrollView *emojiPagesScrollView;
@@ -56,7 +62,7 @@ typedef NS_ENUM(NSInteger, AGEmojiKeyboardViewCategoryImage) {
  get all the relevent images to present in the view.
  */
 - (instancetype)initWithFrame:(CGRect)frame
-                   dataSource:(id<AGEmojiKeyboardViewDataSource>)dataSource;
+                   dataSource:(id<AGEmojiKeyboardViewDataSource>)dataSource isDisplayAll:(BOOL)isDisplayAll;
 
 @end
 

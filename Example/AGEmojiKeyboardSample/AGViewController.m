@@ -20,10 +20,10 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
-  AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 216) dataSource:self];
-  emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-  emojiKeyboardView.delegate = self;
-  self.textView.inputView = emojiKeyboardView;
+    AGEmojiKeyboardView *emojiKeyboardView = [[AGEmojiKeyboardView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 216) dataSource:self isDisplayAll:YES];
+    emojiKeyboardView.autoresizingMask = UIViewAutoresizingFlexibleHeight;
+    emojiKeyboardView.delegate = self;
+    self.textView.inputView = emojiKeyboardView;
 }
 
 - (void)emojiKeyBoardView:(AGEmojiKeyboardView *)emojiKeyBoardView didUseEmoji:(NSString *)emoji {
